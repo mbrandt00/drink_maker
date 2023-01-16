@@ -1,11 +1,11 @@
 import React from "react";
 import Login from "./components/Login/Login";
-
+import { UserContextProvider, UserContext } from "./contexts/UserContext";
 function App() {
   return (
-    <>
-      <Login />
-    </>
+    <UserContextProvider>
+      <Login />;
+    </UserContextProvider>
   );
 }
 

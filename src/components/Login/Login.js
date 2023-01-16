@@ -1,14 +1,25 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { GoogleLogin } from "@react-oauth/google";
 import jwt_decode from "jwt-decode";
-
-const googleLogin = () => {
+import { UserContext } from "../../contexts/UserContext";
+import axios from "axios";
+const Login = () => {
+  const userData = useContext(UserContext);
+  const handleChange = (user) => {
+    userData.setUser(user);
+    console.log(userData.user);
+  };
   const responseGoogle = (response) => {
     const userObject = jwt_decode(response.credential);
-    console.log(userObject);
     localStorage.setItem("user", JSON.stringify(userObject));
+    axios
+      .post("http://localhost:3000/api/v1/users", userObject)
+      .then((response) => {
+        handleChange(response.data.user);
+      })
+      .catch((error) => console.log(error));
     const { name, sub, picture } = userObject;
     const doc = {
       _id: sub,
@@ -47,4 +58,4 @@ const googleLogin = () => {
   );
 };
 
-export default googleLogin;
+export default Login;
